@@ -1,36 +1,38 @@
-var s = document.getElementById('vector');
+var container = document.getElementById("vimage");
+var clearBtn = document.getElementById("og");
 
-var clear = function(e) {
-    while (s.lastChild) {
-	s.removeChild(s.lastChild);
-    };
-};
+var change = function(e) {
+	console.log("haha")
+}
 
-var circle = function(e) {
-    console.log('circle!');
-    var c1 = document.createElementNS("http://www.w3.org/2000/svg","circle");
-    c1.setAttribute("cx", e.offsetX);
-    c1.setAttribute("cy", e.offsetY);
-    c1.setAttribute("r", 20);
-    c1.setAttribute("fill","#00FFFF");
-    s.appendChild(c1);   
+var createCircle = function (x,y) {
+	var c =	document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    c.setAttribute("fill", "blue");
+    c.setAttribute("cx", x);
+    c.setAttribute("cy", y);
+    c.setAttribute("r", "20");
+    c.addEventListener("click", change);
+    return c;
+}
+var drawCicle = function(e) {
+	var f = createCircle(event.offsetX, event.offsetY);
+	container.appendChild(f);
+}
 
-    c1.addEventListener('click', colchange);
 
-    if (c1.getAttribute('fill') == '#9be564') {
-	s.addEventListener('click', remaddrand, true);
-    };
-};
+var clear = function() {
+	var list = document.getElementsByTagName("circle");
+	while (list.length != 0) {
+		container.removeChild(list[0]);
+	}
+}
 
-var colchange = function(e) {
-    console.log('colors!');
-    this.setAttribute('fill', '#9be564');
-    e.stopPropagation();
-};
+var clearOne = function(e) {
+	container.removeChild(e)
+}
 
-var remaddrand = function(e) {
-    console.log('target: ' + e.target);
-    e.stopPropagation();
-};
 
-s.addEventListener("click", circle);
+
+
+container.addEventListener("click", drawCicle);
+clearBtn.addEventListener("click", clear);
