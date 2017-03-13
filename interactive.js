@@ -12,12 +12,12 @@ var change = function(e) {
 	e.stopPropagation();
 };
 
-var createCircle = function (x,y) {
+var createCircle = function (x,y,r) {
     var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     c.setAttribute("fill", "blue");
     c.setAttribute("cx", x);
     c.setAttribute("cy", y);
-    c.setAttribute("r", "20");
+    c.setAttribute("r", r);
     c.setAttribute('vx', direction());
     c.setAttribute('vy', direction());
     c.addEventListener("click", change);
@@ -25,20 +25,21 @@ var createCircle = function (x,y) {
 };
 
 var drawCicle = function(e) {
-	var f = createCircle(event.offsetX, event.offsetY);
+	var f = createCircle(event.offsetX, event.offsetY, 20);
 	container.appendChild(f);
 };
 
-var draw = function(x,y) {
-    var l = createCircle(x,y);
+var draw = function(x,y,r) {
+    var l = createCircle(x,y,r);
     container.appendChild(l);
+    return l;
 }
 
 var drawrand = function(e) {
     console.log(this);
     var x = Math.random() * 500;
-    var y = Math.random() * 500;
-    var d = createCircle(x,y);
+    var y = Math.random() * 750;
+    var d = createCircle(x,y,20);
     container.appendChild(d);
     clearOne(e);
 };
@@ -54,6 +55,10 @@ var clearOne = function(e) {
         console.log(e.target);
 	container.removeChild(e.target);
 };
+
+var clearb = function(ball) {
+    container.removeChild(ball);
+}
 
 var move = function(e) {
 	window.cancelAnimationFrame(rid);
@@ -73,12 +78,23 @@ var move = function(e) {
                     var x = parseInt(balls[i].getAttribute('cx')) + vx;
                     var y = parseInt(balls[i].getAttribute('cy')) + vy;
 
+                    var r = parseInt(balls[i].getAttribute('r'));
+
                     if (x >= container.clientWidth || x <= 0) {
                         vx *= -1;
                     }
 
                     if (y >= container.clientHeight || y <= 0) {
                         vy *= -1;
+                    }
+
+                    if (x == 250) {
+                        split(balls[i]);
+                    }
+
+                    if (r < 1) {
+                        clearb(balls[i]);
+                        continue;
                     }
                     
                     balls[i].setAttribute('cx',x);
@@ -90,6 +106,25 @@ var move = function(e) {
 	};
         bounce();
 };
+
+var split = function(ball) {
+     console.log(ball);
+     var vx = parseInt(ball.getAttribute('vx'));
+     var vy = parseInt(ball.getAttribute('vy'));            
+
+     var x = parseInt(ball.getAttribute('cx'));
+     var y = parseInt(ball.getAttribute('cy'));
+     var r = parseInt(ball.getAttribute('r'));
+     
+     r /= 2;
+     ball.setAttribute('r', r);
+     
+     var newc = draw(x,y,r);
+     console.log(newc);
+     
+     newc.setAttribute('vx', -vx);
+     newc.setAttribute('vy', -vy);
+}
 
 var stopIt = function() {
     console.log(rid);
