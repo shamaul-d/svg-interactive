@@ -3,7 +3,9 @@ var clearBtn = document.getElementById("og");
 
 var change = function(e) {
 	console.log("haha");
+        console.log(this);
 	this.setAttribute('fill', 'green');
+	this.addEventListener("click", drawrand);
 	e.stopPropagation();
 };
 
@@ -22,6 +24,14 @@ var drawCicle = function(e) {
 	container.appendChild(f);
 };
 
+var drawrand = function(e) {
+    console.log(this);
+    var x = Math.random() * 500;
+    var y = Math.random() * 500;
+    var d = createCircle(x,y);
+    container.appendChild(d);
+    clearOne(e);
+};
 
 var clear = function() {
 	var list = document.getElementsByTagName("circle");
@@ -31,7 +41,8 @@ var clear = function() {
 };
 
 var clearOne = function(e) {
-	container.removeChild(e)
+        console.log(e.target);
+	container.removeChild(e.target);
 };
 
 
